@@ -15,11 +15,12 @@ import javafx.stage.Stage;
 public class BattleShip extends Application {
     
     @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/View/FXMLDocument.fxml"));       
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+    public void start(Stage stage1) throws Exception {
+        Parent root1 = FXMLLoader.load(getClass().getResource("/View/FXMLChooseGame.fxml"));       
+        Scene scene1 = new Scene(root1);
+        stage1.setScene(scene1);
+        stage1.setTitle("Game");
+        stage1.show();
     }
 
     /**
@@ -28,5 +29,4 @@ public class BattleShip extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
 }
