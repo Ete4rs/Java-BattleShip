@@ -47,14 +47,22 @@ public class FXMLChooseGameController implements Initializable {
     @FXML
     private void handleSingleGameButtonAction(ActionEvent event) throws IOException {
         //mire fxml vase single game ro baz mikone va badesh satge ro be fuck mide
+        try
+        {
+            handleExitButtonAction();
+            Parent root2 = FXMLLoader.load(getClass().getResource("/View/FXMLSinglePlayer.fxml"));       
+            Stage stage2 = new Stage();
+            Scene scene2 = new Scene(root2);
+            stage2.setScene(scene2);
+            stage2.setTitle("BattleShip Game");
+    
+            stage2.show();
+        }catch(RuntimeException e){
+          System.out.println("** RuntimeException from main");
+        }
         
-        Parent root2 = FXMLLoader.load(getClass().getResource("/View/FXMLSinglePlayer.fxml"));       
-        Scene scene2 = new Scene(root2);
-        Stage stage2 = new Stage();
-        stage2.setScene(scene2);
-        stage2.setTitle("Game");
-        stage2.show();
-        handleExitButtonAction();
+        
+        
     }
     
     @FXML

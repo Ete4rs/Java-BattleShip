@@ -15,7 +15,7 @@ import javafx.scene.control.Button;
 /**
  * FXML Controller class
  *
- * @author Morteza
+ * @author Morteza Sarvestani
  */
 public class FXMLClosingGameController implements Initializable {
     @FXML
