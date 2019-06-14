@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -33,10 +34,14 @@ public class FXMLClosingGameController implements Initializable {
 
     @FXML
     private void handleOkayButtonAction(ActionEvent event) {
+        System.exit(1);
     }
 
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
+        Stage stage = (Stage) CancelButton.getScene().getWindow();
+        // do what you have to do
+        stage.close();
     }
     
 }

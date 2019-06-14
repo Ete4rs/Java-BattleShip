@@ -13,10 +13,13 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -49,12 +52,11 @@ public class FXMLSinglePlayerController implements Initializable {
             for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 int a = i, b = j;
-                System.out.println("kir khar 1");
                 myCells[i][j].setOnAction(new EventHandler(){
-
+                    
                     @Override
                     public void handle(Event event) {
-                        System.out.println(a + " " + b);
+                        myCells[a][b].setStyle("-fx-background-color: Green;");
                     }  
                });
             }
@@ -77,9 +79,7 @@ public class FXMLSinglePlayerController implements Initializable {
 
     //in tabe miad dokmeharo mirize tu gridpanha
 
-    /**
-     *
-     */
+    
     public void SetButton(){
         SystemGridPane.setDisable(true);
 
@@ -90,7 +90,6 @@ public class FXMLSinglePlayerController implements Initializable {
                 myCells[i][j].setMaxSize(60, 45);
                 systemCells[i][j].setMaxSize(60, 45);
                 MyGridPane.add(myCells[i][j], j, i);
-                System.out.println("kir khar 2");
                 SystemGridPane.add(systemCells[i][j], j, i);
             }
         }
@@ -99,14 +98,19 @@ public class FXMLSinglePlayerController implements Initializable {
 
     @FXML
     private void HandleLeaveGameButtonAction(ActionEvent event) {
+        try{
+            Parent root3 = FXMLLoader.load(getClass().getResource("/View/FXMLClosingGame.fxml"));       
+            Stage stage3 = new Stage();
+            Scene scene3 = new Scene(root3);
+            stage3.setScene(scene3);
+            stage3.setTitle("Warning");
+            stage3.show();
+        }catch(Exception e){
+            System.out.println("** RuntimeException from main");
+        }
     }
 
     @FXML
     private void handleNewGameButtonAction(ActionEvent event) {
-    }
-
-    @FXML
-    private void ActionMouseClickMYGridPane(MouseEvent event) {
-        
     }    
 }
