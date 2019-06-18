@@ -2,7 +2,6 @@
 package Model;
 
 /**
- *
  * @author Morteza Sarvestani
  */
 public class Ship {
