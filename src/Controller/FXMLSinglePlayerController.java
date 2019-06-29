@@ -6,8 +6,10 @@
 package Controller;
 
 import Model.Ship;
+import static java.lang.Math.abs;
 import javafx.event.EventHandler;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,8 +25,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
- *
  * @author Morteza Sarvestani
  */
 public class FXMLSinglePlayerController implements Initializable {
@@ -69,8 +69,8 @@ public class FXMLSinglePlayerController implements Initializable {
     private static int numberFourShip=0;
     private static int H_V_4;
     private static int C_C_4;
-    
-    
+    @FXML
+    private Button RandomButton;
     
         //in vase keshtihaye 1 size
     
@@ -84,20 +84,16 @@ public class FXMLSinglePlayerController implements Initializable {
         this.MyShips[NumberShip].setIsVertical(true);
         this.MyShips[NumberShip].setRowBegin(a);
         this.MyShips[NumberShip++].setRowFinish(a);
-        if(NumberShip  == 4){
+        if(NumberShip  == 10){
             this.MyGridPane.setDisable(true);
             this.OneShipButton.setDisable(true);
-            this.TwoShipButton.setDisable(false);
+            this.PlayButton.setDisable(false);
         }
         
         this.myCells[a][b].setStyle("-fx-background-color: Green;");
         for(int i=a-1 ; i<=a+1 ; i++){
-            if(i>9){
-                break;
-            }
-            if(i<0){
-                continue;
-            }
+            if(i>9){break;}
+            if(i<0){continue;}
             for(int j=b-1 ; j<=b+1 ; j++){
                 if(j>9){
                     break;
@@ -106,8 +102,7 @@ public class FXMLSinglePlayerController implements Initializable {
                     continue;
                 }
                 this.myCells[i][j].setDisable(true);
-                this.MyMap[i][j] =0;//naqshe ro michine
-                
+                this.MyMap[i][j] =0;
             }
         }
         
@@ -115,43 +110,51 @@ public class FXMLSinglePlayerController implements Initializable {
     /*#############################*/
         //in tabe keshtiaye 2 size ro migad
     public void EnterButtonForTwoSize(int a ,int b){
-            numberTwoShip++;    //ba in motaqyer daram tedad keshtyaye ba size 2 ro mishmaram vali 2 barabar
-            if(numberTwoShip %2 ==1){
-                this.H_V_2 = a;   //ba in miam taiin mikonam ke keshtim ofoqie ya amudi
-                this.C_C_2 = b;   //index sotun va radif ro ham barmidaram
-            }
-            myCells[a][b].setStyle("-fx-background-color: Green;");     //khuneii ke entekhab mishe ro rang mikonam 
-
-            this.MyMap[a][b] = 1;       //khune entekhabim : mokhtasatesh ro negah midaram
-
-            this.MyShips[NumberShip].setShipSize(sizeShipChoice);   //size keshti ro mifrestam be shey
-
+            numberTwoShip++;
+            
+            myCells[a][b].setStyle("-fx-background-color: Green;"); 
+            this.MyMap[a][b] = 1;   
+            this.MyShips[NumberShip].setShipSize(sizeShipChoice);  
             this.myCells[a][b].setDisable(true);    //khune entekhabi ham disable mishe
 
-            if(numberTwoShip %2 == 1){  //in halqe zamani ejra mishe ke ye khune az keshti ro entekhab kardam
+            if(numberTwoShip % 2  == 1 ){ 
                 this.MyShips[NumberShip].setShipSize(sizeShipChoice);
-                for(int i=0 ; i<10 ; i++){
-                    //umadam khunehaye atrafesh ro ke niaz nabud disable kardam 
-                    for(int j=0 ; j<10 ; j++){
-                        if(i==a && j==b-1){
-                            continue;
-                        }
-                        if(i==a-1 && j==b){
-                            continue;
-                        }
-                        if(i==a && j==b+1){
-                            continue;
-                        }
-                        if(i==a+1 && j==b){
-                            continue;
-                        }
+                this.H_V_2 = a;  
+                this.C_C_2 = b;   
+                for(int i=0 ; i<=9 ; i++){
+                    for(int j=0 ; j<=9 ; j++){
+                        if(i==H_V_2 && j==C_C_2-1){continue;}
+                        if(i==H_V_2 && j==C_C_2+1){continue;}
+                        if(i==H_V_2-1 && j==C_C_2){continue;}
+                        if(i==H_V_2+1 && j==C_C_2){continue;}
                         this.myCells[i][j].setDisable(true);
                     }
                 }
+                int num=0;
+                if( a+1>=0 && a+1<=9  && !myCells[a+1][b].isDisabled()){num+=1;}
+                if( a-1>=0 && a-1<=9  && !myCells[a-1][b].isDisabled()){num+=1;}
+                if( b+1>=0 && b+1<=9  && !myCells[a][b+1].isDisabled()){num+=1;}
+                if( b-1>=0 && b-1<=9  && !myCells[a][b-1].isDisabled()){num+=1;}
+                if(num<1){
+                    myCells[a][b].setStyle("-fx-background-color: White;");
+                    MyMap[a][b] = -1;
+                    for(int i=0 ; i<10 ; i++){
+                        for(int j=0 ; j<10 ; j++){
+                            if(MyMap[i][j]== 0 || MyMap[i][j] == 1){
+                                this.myCells[i][j].setDisable(true);
+                                continue;
+                            }
+                            myCells[i][j].setDisable(false);
+                        }
+                    }
+                    if(numberTwoShip==1){numberTwoShip=0;}
+                    else if(numberTwoShip==3){numberTwoShip=2;}
+                    else{numberTwoShip=4;}
+                }
+                
             }
             if(numberTwoShip % 2 == 0){
-                //in zamani kar mikone ke tye keshti kamel shod
-                if(H_V_2==a){ 
+                if(H_V_2==a){
                     //miam sheyesh ro kamel mikonam
                     this.MyShips[NumberShip].setIsHORIZONTAL(true);
                     this.MyShips[NumberShip].setIsVertical(false);
@@ -206,26 +209,22 @@ public class FXMLSinglePlayerController implements Initializable {
                     }
 
                 }
+                for(int i=0 ; i<10 ; i++){
+                    for(int j=0 ; j<10 ; j++){
+                        if(MyMap[i][j]== 0 || MyMap[i][j] == 1){
+                            this.myCells[i][j].setDisable(true);
+                            continue;
+                        }
+                        myCells[i][j].setDisable(false);
+                    }
+                }
                 NumberShip++;   //khob ye keshti jadid gayidam yeki beshun ezaf mishe
         }
-        if(numberTwoShip % 2 == 0){
-            //Akhar ham miam map ro update mikonam ba keshti jadid
-            for(int i=0 ; i<10 ; i++){
-                for(int j=0 ; j<10 ; j++){
-                    if(MyMap[i][j]== 0 || MyMap[i][j] == 1){
-                        this.myCells[i][j].setDisable(true);
-                        continue;
-                    }
-                    myCells[i][j].setDisable(false);
-                }
-            }
-        }
-        this.MyGridPane.setDisable(false);
         if(numberTwoShip == 6){
             //khob 3 ta keshti 2 size ezaf shod pas kar 2 tamum
             this.MyGridPane.setDisable(true);
             this.TwoShipButton.setDisable(true);
-            this.ThreeShipButton.setDisable(false);
+            this.OneShipButton.setDisable(false);
         }
     }
     /*############################*/
@@ -243,9 +242,6 @@ public class FXMLSinglePlayerController implements Initializable {
             this.H_V_3 = a;
             this.C_C_3 = b;
             
-            for(int i=a-2 ; i<=a+2 ; i++){
-                
-            }
             
             for(int i=0 ; i<10 ; i++){
                 for(int j=0 ; j<10 ; j++){
@@ -255,6 +251,48 @@ public class FXMLSinglePlayerController implements Initializable {
                     
                     this.myCells[i][j].setDisable(true);
                 }
+            }
+            int numR=0 , numC=0;
+            for(int i=a-2 ; i<=a+2 ; i++){
+                if(i==a || i<0){continue;}
+                if(i>9){break;}
+                if(!myCells[i][b].isDisable()){
+                    numR++;
+                }
+            }
+            for(int i=b-3 ; i<=b+3 ; i++){
+                if(i<0 || i==b){continue;}
+                if(i>9){break;}
+                if(!myCells[a][i].isDisabled()){
+                    numC++;
+                }
+            }
+            if(numR<2){
+                for(int i=a-3 ; i<=a+3 ; i++){
+                    if(i<0){continue;}
+                    if(i>9){break;}
+                    this.myCells[i][b].setDisable(true);
+                }
+            }
+            if(numC<2){
+                for(int i=b-2 ; i<=b+2 ; i++){
+                    if(i<0){continue;}
+                    if(i>9){break;}
+                    this.myCells[a][i].setDisable(true);
+                }
+            }
+            if(numC<2 && numR<2){
+                this.MyMap[a][b] = -1;
+                this.myCells[a][b].setStyle(null);
+                for(int i=0 ; i<10 ; i++){
+                    for(int j=0 ; j<10 ; j++){
+                        if( (MyMap[i][j]!=0) && (MyMap[i][j]!=1) ){
+                            myCells[i][j].setDisable(false);
+                        }
+                    }
+                }
+                if(numberThreeShip==1){numberThreeShip=0;}
+                else{numberThreeShip=3;}
             }
         }
         
@@ -273,8 +311,6 @@ public class FXMLSinglePlayerController implements Initializable {
                             this.myCells[i][j].setDisable(true);
                         }
                     }
-                    
-                    
                 }else{
                     this.MyShips[NumberShip].setIsHORIZONTAL(false);
                     this.MyShips[NumberShip].setIsVertical(true);
@@ -349,7 +385,7 @@ public class FXMLSinglePlayerController implements Initializable {
         if(numberThreeShip == 6){
             this.MyGridPane.setDisable(true);
             this.ThreeShipButton.setDisable(true);
-            this.FourShipBurron.setDisable(false);
+            this.TwoShipButton.setDisable(false);
         }
     }
     /*############################*/
@@ -378,37 +414,39 @@ public class FXMLSinglePlayerController implements Initializable {
         
         if(numberFourShip==2){
                 if(H_V_4==a){
-                    this.MyShips[NumberShip].setIsHORIZONTAL(true);
-                    this.MyShips[NumberShip].setIsVertical(false);
-                    
-                    int y = C_C_4;
-                    if(y>b){y=b;}
-                    
-                    for(int i=0 ; i<10 ; i++){
-                        for(int j=0 ; j<10 ; j++){
-                            if(i==H_V_4 && (j==C_C_4-3 || j==C_C_4-2 
-                                    || j==C_C_4-1 || j==C_C_4 || j==C_C_4+1 || j==C_C_4+2 || j==C_C_4+3 )){continue;
+                        this.MyShips[NumberShip].setIsHORIZONTAL(true);
+                        this.MyShips[NumberShip].setIsVertical(false);
+
+
+
+                        int y = C_C_4;
+                        if(y>b){y=b;}
+
+                        for(int i=0 ; i<10 ; i++){
+                            for(int j=0 ; j<10 ; j++){
+                                if(i==H_V_4 && (j==y-3 || j==y-2 
+                                        || j==y-1 || j==y || j==y+1 || j==y+2 || j==y+3 )){continue;
+                                }
+                                this.myCells[i][j].setDisable(true);
                             }
-                            this.myCells[i][j].setDisable(true);
                         }
-                    }
                 }
                 
                 else{
-                    this.MyShips[NumberShip].setIsHORIZONTAL(true);
-                    this.MyShips[NumberShip].setIsVertical(false);
-                    
-                    int x = H_V_4;
-                    if(x>a){x=a;}
-                    
-                    for(int i=0 ; i<10 ; i++){
-                        for(int j=0 ; j<10 ; j++){
-                            if(j==C_C_4 && (i==H_V_4-2 || i==H_V_4-1 || i==H_V_4 || i==H_V_4+3 
-                                || i==H_V_4+2 || i==H_V_4+1 )){continue;}
-                            
-                            this.myCells[i][j].setDisable(true);
-                        }
-                    }
+                        this.MyShips[NumberShip].setIsHORIZONTAL(true);
+                        this.MyShips[NumberShip].setIsVertical(false);
+
+                        int x = H_V_4;
+                        if(x>a){x=a;}
+
+                        for(int i=0 ; i<10 ; i++){
+                            for(int j=0 ; j<10 ; j++){
+                                if(j==C_C_4 && (i==x-2 || i==x-1 || i==x || i==x+3 
+                                    || i==x+2 || i==x+1 )){continue;}
+
+                                this.myCells[i][j].setDisable(true);
+                            }
+                        }  
                 }
         }
         
@@ -419,7 +457,7 @@ public class FXMLSinglePlayerController implements Initializable {
                     
                     for(int i=0 ; i<10 ; i++){
                         for(int j=0 ; j<10 ; j++){
-                            if(i==H_V_4 && (j==C_C_4-1 || j==C_C_4 || j==C_C_4+1 || j==C_C_4+2 || j==C_C_4+3 )){continue;
+                            if(i==H_V_4 && (j==y-1 || j==y || j==y+1 || j==y+2 || j==y+3 )){continue;
                             }
                             this.myCells[i][j].setDisable(true);
                         }
@@ -432,8 +470,7 @@ public class FXMLSinglePlayerController implements Initializable {
                     
                     for(int i=0 ; i<10 ; i++){
                         for(int j=0 ; j<10 ; j++){
-                            if(j==C_C_4 && (i==H_V_4-1 || i==H_V_4 || i==H_V_4+3 || i==H_V_4+2 || i==H_V_4+1 )){continue;
-                            }
+                            if(j==C_C_4 && (i==x-1 || i==x || i==x+3 || i==x+2 || i==x+1 )){continue;}
                             this.myCells[i][j].setDisable(true);
                         }
                     }
@@ -455,19 +492,19 @@ public class FXMLSinglePlayerController implements Initializable {
                             this.MyMap[i][j] =0;
                         }
                     }
+                    
                 }
                 
                 else{
                     int x = H_V_4;
                     if(x>a){x=a;}
                     
-                    for(int i=x-1 ; i<=x+1 ; i++){
+                    for(int i=x-1 ; i<=x+4 ; i++){
                         if(i<0){continue;}
                         if(i>9){break;}
-                        for(int j=C_C_4-1 ; j<=C_C_4+4 ; j++){
+                        for(int j=C_C_4-1 ; j<=C_C_4+1 ; j++){
                             if(j<0){continue;}
                             if(j>9){break;}
-                            
                             if(this.MyMap[i][j]==1){continue;}
                             this.MyMap[i][j] =0;
                         }
@@ -483,11 +520,16 @@ public class FXMLSinglePlayerController implements Initializable {
                         this.myCells[i][j].setDisable(false);
                     }
                 }
+                
+                
+                
                 this.NumberShip++;
+                this.ThreeShipButton.setDisable(false);
                 this.FourShipBurron.setDisable(true);
-                this.PlayButton.setDisable(false);
                 this.MyGridPane.setDisable(true);
         }
+        
+        
     }
     
     //in thread miad har 0.5 sanie yebar check mikone bebine khuneii feshar dade shode ya na
@@ -530,6 +572,120 @@ public class FXMLSinglePlayerController implements Initializable {
         
     };
 
+    //##################
+    public void FourShipRandom(){
+        Random rand = new Random();
+        boolean vertical = rand.nextBoolean();
+        if(vertical){
+                int a = abs(rand.nextInt()) %10;
+                int b = abs(rand.nextInt()) %10;
+                int First=0;
+                for(int i=a-3 ; i<=a+3 ; i++){
+                    if(i<0){continue;}
+                    if(i>9){break;}
+                    First = i;
+                    break;
+                }
+                for(int i=First-1 ; i<=First+4 ; i++){
+                    if(i<0){continue;}
+                    if(i>9){break;}
+                    for(int j=b-1 ; j<=b+1 ; j++){
+                        if(j>9){break;}
+                        if(j<0){continue;}
+                        if(j==b && (i==First || i==First+1 || i==First+2 || i==First+3 )){
+                            this.MyMap[i][j] = 1;
+                            this.myCells[i][j].setStyle("-fx-background-color: Green;");
+                            continue;
+                        }
+                        this.MyMap[i][j] = 0;
+                    }
+                }
+        }
+        else{
+            int a = abs(rand.nextInt()) %10;
+            int b = abs(rand.nextInt()) %10;
+            int First=0;
+            for(int i=b-3 ; i<=b+3 ; i++){
+                if(i<0){continue;}
+                if(i>9){break;}
+                First = i;
+                break;
+            }
+            for(int i=a-1 ; i<=a+1 ; i++){
+                if(i<0){continue;}
+                if(i>9){break;}
+                for(int j=First-1 ; j<=First+4 ; j++){
+                    if(j>9){break;}
+                    if(j<0){continue;}
+                    if(i==a && (j==First || j==First+1 || j==First+2 || j==First+3)){
+                        this.MyMap[i][j] = 1;
+                        this.myCells[i][j].setStyle("-fx-background-color: Green;");
+                        this.myCells[i][j].setDisable(true);
+                        continue;
+                    }
+                    this.MyMap[i][j] = 0;
+                    this.myCells[i][j].setDisable(true);
+                }
+            }
+        }
+        for(int i=0 ; i<10 ; i++){
+            for(int j=0 ; j<10 ; j++){
+                System.out.print(MyMap[i][j]+" ");
+            }
+            System.out.println("");
+        }
+        System.out.println("\n\n");
+    }
+    //##################
+    public void ThreeShipRandom(){
+        Random rand = new Random();
+        int number=0;
+        while(true){
+            boolean vertical = rand.nextBoolean();
+            if(vertical){
+                int a = abs(rand.nextInt())%10;
+                int b = abs(rand.nextInt())%10;
+                int First = 0 , f=0;
+                for(int i=a-3 ; i<=a+3 ; i++){
+                    if(i<0){continue;}
+                    if(i>9){break;}
+                    if(MyMap[i][b]==1 || MyMap[i][b]==0){continue;}
+                    f++;
+                }
+                if(f<3){continue;}
+                for(int i=a-3 ; i<=a+3 ; i++){
+                    if(i<0){continue;}
+                    if(i>9){break;}
+                    if(MyMap[i][b] ==-1 && MyMap[i+1][b]==-1 && MyMap[i+2][b]==-1 ){
+                        First = i;
+                        break;
+                    }
+                }
+                for(int i=First-1 ; i<=First+3 ; i++){
+                    if(i<0){continue;}
+                    if(i>9){break;}
+                    for(int j=b-1 ; j<=b+1 ; j++){
+                        if(j>9){break;}
+                        if(j<0){continue;}
+                        if(j==b && (i==First || i==First+1 || i==First+2)){
+                            this.MyMap[i][j]=1;
+                            this.myCells[i][j].setStyle("-fx-background-color: Green;");
+                            continue;
+                        }
+                        this.MyMap[i][j] = 0;
+                    }
+                }
+                break;
+            }
+        }
+        for(int i=0 ; i<10 ; i++){
+            for(int j=0 ; j<10 ; j++){
+                System.out.print(MyMap[i][j]+" ");
+            }
+            System.out.println("");
+        }
+        System.out.println("\n\n\n\n");
+    }
         //in tabe faqat miad map ro amade mikone
     public void SetButtonAndShips(){
         //tu in tabe umadam shipha va cellha ro ok kardam
@@ -541,7 +697,7 @@ public class FXMLSinglePlayerController implements Initializable {
         this.PlayButton.setDisable(true);
         this.ThreeShipButton.setDisable(true);
         this.TwoShipButton.setDisable(true);
-        this.FourShipBurron.setDisable(true);
+        this.OneShipButton.setDisable(true);
         for(int i=0 ; i<10 ; i++){
             MyShips[i] = new Ship();
             SystemShips[i] = new Ship();
@@ -574,6 +730,25 @@ public class FXMLSinglePlayerController implements Initializable {
         }    
     }  
     
+    public void NewMap(){
+        this.PlayButton.setDisable(true);
+        this.OneShipButton.setDisable(true);
+        this.TwoShipButton.setDisable(true);
+        this.ThreeShipButton.setDisable(true);
+        this.FourShipBurron.setDisable(false);
+        this.MyGridPane.setDisable(true);
+        NumberShip=0;
+        numberFourShip=0;
+        numberThreeShip=0;
+        numberTwoShip=0;
+        for(int i=0 ; i<10 ; i++){
+            for(int j=0 ; j<10 ; j++){
+                this.myCells[i][j].setStyle(null);
+                this.MyMap[i][j] = -1;
+                this.myCells[i][j].setDisable(false);
+            }
+        }
+    }
     
     
     
@@ -635,5 +810,18 @@ public class FXMLSinglePlayerController implements Initializable {
 
     @FXML
     private void handleNewGameButtonAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleRandomButtonAction(ActionEvent event) {
+        NewMap();
+        FourShipRandom();
+        ThreeShipRandom();
+        
+    }
+
+    @FXML
+    private void handleNewShipsButtonAction(ActionEvent event) {
+        NewMap();
     }
 }
