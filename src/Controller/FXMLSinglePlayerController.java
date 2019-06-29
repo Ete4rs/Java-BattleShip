@@ -6,9 +6,14 @@
 package Controller;
 
 import Model.Ship;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import static java.lang.Math.abs;
 import javafx.event.EventHandler;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -59,6 +64,8 @@ public class FXMLSinglePlayerController implements Initializable {
     private int[][] MyMap = new int[10][10];
     private int[][] SystemMap = new int[10][10];
     private static int NumberShip = 0 ;
+    private static int myPoint =0;
+    private static int systemPoint=0;
     
     private static int numberTwoShip =0;
     private static int C_C_2;
@@ -82,10 +89,16 @@ public class FXMLSinglePlayerController implements Initializable {
     @FXML
     private Label SystemRatingLable;
     
+    private File file ;
+    private FileWriter fileWriter;
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+    private LocalDateTime now;
         //in vase keshtihaye 1 size
+    @FXML
+    private Label WinLable;
     
     public void EnterButtonForOneSize(int a ,int b){
-        this.MyMap[a][b] = 1;
+        this.MyMap[a][b] = 4;
         this.myCells[a][b].setDisable(true);
         this.MyShips[NumberShip].setShipSize(sizeShipChoice);
         this.MyShips[NumberShip].setCulomnBegin(b);
@@ -111,8 +124,16 @@ public class FXMLSinglePlayerController implements Initializable {
                 if(j<0){
                     continue;
                 }
+                if(i==a && j==b){continue;}
                 this.myCells[i][j].setDisable(true);
                 this.MyMap[i][j] =0;
+            }
+        }
+        for(int i=0 ; i<10 ; i++){
+            for(int j=0 ; j<10 ; j++){
+                if(MyMap[i][j]==-1){
+                    MyMap[i][j]=0;
+                }
             }
         }
         
@@ -123,7 +144,7 @@ public class FXMLSinglePlayerController implements Initializable {
             numberTwoShip++;
             
             myCells[a][b].setStyle("-fx-background-color: Green;"); 
-            this.MyMap[a][b] = 1;   
+            this.MyMap[a][b] = 3;   
             this.MyShips[NumberShip].setShipSize(sizeShipChoice);  
             this.myCells[a][b].setDisable(true);    //khune entekhabi ham disable mishe
 
@@ -150,7 +171,7 @@ public class FXMLSinglePlayerController implements Initializable {
                     MyMap[a][b] = -1;
                     for(int i=0 ; i<10 ; i++){
                         for(int j=0 ; j<10 ; j++){
-                            if(MyMap[i][j]== 0 || MyMap[i][j] == 1){
+                            if(MyMap[i][j]== 0 || MyMap[i][j]==1 || MyMap[i][j]==2 || MyMap[i][j]==3){
                                 this.myCells[i][j].setDisable(true);
                                 continue;
                             }
@@ -186,7 +207,7 @@ public class FXMLSinglePlayerController implements Initializable {
                             if(j>9){break;}
                             if(j<0){continue;}
                             this.myCells[i][j].setDisable(true);
-                            if(this.MyMap[i][j] != 1){
+                            if(this.MyMap[i][j] != 3){
                                 this.MyMap[i][j]=0;
                             }
                         }
@@ -211,7 +232,7 @@ public class FXMLSinglePlayerController implements Initializable {
                             if(j>9){break;}
                             if(j<0){continue;}
                             this.myCells[i][j].setDisable(true);
-                            if(this.MyMap[i][j] != 1){
+                            if(this.MyMap[i][j] != 3){
                                 this.MyMap[i][j]=0;
                             }
 
@@ -221,7 +242,7 @@ public class FXMLSinglePlayerController implements Initializable {
                 }
                 for(int i=0 ; i<10 ; i++){
                     for(int j=0 ; j<10 ; j++){
-                        if(MyMap[i][j]== 0 || MyMap[i][j] == 1){
+                        if(MyMap[i][j]==0 || MyMap[i][j]==1 || MyMap[i][j]==2 || MyMap[i][j]==3){
                             this.myCells[i][j].setDisable(true);
                             continue;
                         }
@@ -244,7 +265,7 @@ public class FXMLSinglePlayerController implements Initializable {
         
         
         this.numberThreeShip++;
-        this.MyMap[a][b] = 1;
+        this.MyMap[a][b] = 2;
         this.myCells[a][b].setDisable(true);
         this.myCells[a][b].setStyle("-fx-background-color: Green;");
         
@@ -296,7 +317,7 @@ public class FXMLSinglePlayerController implements Initializable {
                 this.myCells[a][b].setStyle(null);
                 for(int i=0 ; i<10 ; i++){
                     for(int j=0 ; j<10 ; j++){
-                        if( (MyMap[i][j]!=0) && (MyMap[i][j]!=1) ){
+                        if( MyMap[i][j]!=-1 ){
                             myCells[i][j].setDisable(false);
                         }
                     }
@@ -352,7 +373,7 @@ public class FXMLSinglePlayerController implements Initializable {
                     for(int j=x-1 ; j<=x+3 ; j++){
                         if(j>9){break;}
                         if(j<0){continue;}
-                        if(MyMap[i][j]==1){continue;}
+                        if(MyMap[i][j]==1 || MyMap[i][j]==2){continue;}
                         MyMap[i][j]=0;
                     }
                 }
@@ -374,14 +395,14 @@ public class FXMLSinglePlayerController implements Initializable {
                         if(j>9){break;}
                         if(j<0){continue;}
                         
-                        if(MyMap[i][j]==1){continue;}
+                        if(MyMap[i][j]==1 || MyMap[i][j]==2){continue;}
                         this.MyMap[i][j]=0;
                     }
                 }
             }
             for(int i=0 ; i<10 ; i++){
                 for(int j=0 ; j<10 ; j++){
-                    if(MyMap[i][j]==0 || MyMap[i][j]==1){
+                    if(MyMap[i][j]==0 || MyMap[i][j]==1 || MyMap[i][j]==2){
                         this.myCells[i][j].setDisable(true);
                         continue;
                     }
@@ -400,7 +421,7 @@ public class FXMLSinglePlayerController implements Initializable {
     }
     /*############################*/
     
-    //in tBE RO VASE  size 4 neveshtam
+    //#####################
     public void EnterButtonForFourSize(int a,int b){
         numberFourShip++;
         this.myCells[a][b].setStyle("-fx-background-color: Green;");
@@ -541,7 +562,76 @@ public class FXMLSinglePlayerController implements Initializable {
         
         
     }
-    
+    //#####################
+    public void System() throws IOException{
+        Random rand = new Random();
+        boolean bool = true;
+        while(true){
+            int a = abs(rand.nextInt())%10;
+            int b = abs(rand.nextInt())%10;
+            if(MyMap[a][b]!=-1){
+                if(MyMap[a][b]==0){
+                    MyMap[a][b]=-1;
+                    bool = false;
+                    systemPoint += 0;
+                    this.SystemRatingLable.setText(""+systemPoint);
+                    String str =
+                            "" + "Sahar shooted to x="+b+",y="+a+" : Water . " + LocalDateTime.now()+"   point : "+systemPoint+"\n";
+                    this.myCells[a][b].setStyle("-fx-background-color: blue;");
+                    fileWriter.write(str);
+                    this.SystemGridPane.setDisable(false);
+                }
+                else{
+                    systemPoint += MyMap[a][b];
+                    MyMap[a][b]=-1;
+                    this.SystemRatingLable.setText(""+systemPoint);
+                    String str =
+                            "" + "Sahar shooted to x="+b+",y="+a+" : Ship . " + LocalDateTime.now()+"   point : "+systemPoint+"\n";
+                    this.myCells[a][b].setStyle("-fx-background-color: #FF7D00");
+                    fileWriter.write(str);
+                    if(systemPoint==50){
+                        String s =
+                            "" + "Sahar is winner" + LocalDateTime.now()+"   point : "+systemPoint+"\nEND\n\n";
+                        this.WinLable.setText("Sahar is Winner  " + LocalDateTime.now() + "  point : " + systemPoint + "\n\n");
+                        this.WinLable.setVisible(true);
+                        fileWriter.write(str);
+                        SystemGridPane.setDisable(true);
+                        bool=false;
+                    }
+                }
+            }
+            if(!bool){
+                break;
+            }
+        }
+    }
+    //#####################
+    public void ShootToShip(int a,int b) throws IOException{
+         
+        
+        myPoint += SystemMap[a][b];
+        this.MyRatingLable.setText("" + myPoint);
+        if(SystemMap[a][b] == 0){
+            String str = "You shooted to x="+b+",y="+a+" : Water . " + LocalDateTime.now()+"   point : "+myPoint+"\n";
+            fileWriter.write(str);
+            this.systemCells[a][b].setStyle("-fx-background-color: blue;");
+            this.systemCells[a][b].setDisable(true);
+            this.SystemGridPane.setDisable(true);
+            System();
+        }
+        else{
+            this.systemCells[a][b].setDisable(true);
+            this.systemCells[a][b].setStyle("-fx-background-color: #FF7D00");
+            String str = "You shooted to x="+b+",y="+a+" : Ship . " + LocalDateTime.now()+"   point : "+myPoint+"\n";
+            fileWriter.write(str);
+            if(myPoint==50){
+                fileWriter.write("You are winner " +  LocalDateTime.now() + "  point : " + myPoint + "\n\n");
+                this.WinLable.setText("You are Winner ");
+                this.WinLable.setVisible(true);
+                this.SystemGridPane.setDisable(true);
+            }
+        }
+    }
     //in thread miad har 0.5 sanie yebar check mikone bebine khuneii feshar dade shode ya na
     Thread Action = new Thread(){
 
@@ -587,7 +677,7 @@ public class FXMLSinglePlayerController implements Initializable {
         @Override
         public void run() {
             try {
-                Thread.sleep(500);
+                Thread.sleep(400);
             } catch (InterruptedException ex) {
                 Logger.getLogger(FXMLSinglePlayerController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -598,21 +688,11 @@ public class FXMLSinglePlayerController implements Initializable {
 
                         @Override
                         public void handle(Event event) {
-                            switch(sizeShipChoice){
-                                case 1:
-                                    EnterButtonForOneSize(a,b);
-                                    break;
-                                case 2:
-                                    EnterButtonForTwoSize( a ,b);
-                                    break;
-                                case 3:
-                                    EnterButtonForThreeSize(a,b);
-                                    break;
-                                case 4:
-                                    EnterButtonForFourSize(a,b);
-                                    break;
-
-                            }    
+                            try {
+                                ShootToShip(a,b);
+                            } catch (IOException ex) {
+                                Logger.getLogger(FXMLSinglePlayerController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }  
                    });
                 }
@@ -722,7 +802,7 @@ public class FXMLSinglePlayerController implements Initializable {
                             if(j>9){break;}
                             if(j<0){continue;}
                             if(j==b && (i==First || i==First+1 || i==First+2)){
-                                Map[i][j]=1;
+                                Map[i][j]=2;
                                 continue;
                             }
                             Map[i][j] = 0;
@@ -737,7 +817,7 @@ public class FXMLSinglePlayerController implements Initializable {
                     for(int i=b-2 ; i<=b+2 ; i++){
                         if(i<0){continue;}
                         if(i>9){break;}
-                        if(Map[a][i]==1 || Map[a][i]==0){continue;}
+                        if(Map[a][i]==0 || Map[a][i]==2 || Map[a][i]==1){continue;}
                         f++;
                     }
                     if(f<3){continue;}
@@ -757,7 +837,7 @@ public class FXMLSinglePlayerController implements Initializable {
                             if(j<0){continue;}
                             if(j>9){break;}
                             if(i==a && (j==First || j==First+1 || j==First+2)){
-                                Map[i][j]=1;
+                                Map[i][j]=2;
                                 continue;
                             }
                             Map[i][j]=0;
@@ -817,7 +897,7 @@ public class FXMLSinglePlayerController implements Initializable {
                             if(j<0){continue;}
                             if(j>9){break;}
                             if(j==b && (i==First || i==First+1)){
-                                Map[i][j] = 1;
+                                Map[i][j] = 3;
                                 continue;
                             }
                             Map[i][j] = 0;
@@ -850,7 +930,7 @@ public class FXMLSinglePlayerController implements Initializable {
                             if(j<0){continue;}
                             if(j>9){break;}
                             if(i==a && (j==First || j==First+1)){
-                                Map[i][j] = 1;
+                                Map[i][j] = 3;
                                 continue;
                             }
                             Map[i][j] = 0;
@@ -884,8 +964,8 @@ public class FXMLSinglePlayerController implements Initializable {
                 int a = abs(rand.nextInt(10));
                 int b = abs(rand.nextInt(10));
                 
-                if(Map[a][b]==1 || Map[a][b]==0){continue;}
-                Map[a][b] = 1;
+                if(Map[a][b]!=-1){continue;}
+                Map[a][b] = 4;
                 
                 for(int i=a-1 ; i<=a+1 ; i++){
                     if(i<0){continue;}
@@ -907,7 +987,7 @@ public class FXMLSinglePlayerController implements Initializable {
             }
             for(int i=0 ; i<10 ; i++){
                 for(int j=0 ; j<10 ; j++){
-                    if(MyMap[i][j]==1){
+                    if(MyMap[i][j]==1 || MyMap[i][j]==2 || MyMap[i][j]==3 || MyMap[i][j]==4){
                         this.myCells[i][j].setStyle("-fx-background-color: Green;");
                     }
                     if(MyMap[i][j]==-1){
@@ -924,7 +1004,7 @@ public class FXMLSinglePlayerController implements Initializable {
             }
             for(int i=0 ; i<10 ; i++){
                 for(int j=0 ; j<10 ; j++){
-                    if(MyMap[i][j]==-1){
+                    if(SystemMap[i][j]==-1){
                         this.SystemMap[i][j]=0;
                     }
                 }
@@ -935,6 +1015,9 @@ public class FXMLSinglePlayerController implements Initializable {
     //###########################
     //in tabe faqat miad map ro amade mikone
     public void SetButtonAndShips(){
+        this.WinLable.setVisible(false);
+        this.MyRatingLable.setVisible(false);
+        this.SystemRatingLable.setVisible(false);
         //tu in tabe umadam shipha va cellha ro ok kardam
         MyShips = new Ship[10];
         SystemShips = new Ship[10];
@@ -1038,7 +1121,7 @@ public class FXMLSinglePlayerController implements Initializable {
     }
   
     @FXML 
-    private void handlePlayButtonAction(ActionEvent e){
+    private void handlePlayButtonAction(ActionEvent e) throws IOException{
         FourShipRandom(this.SystemMap , false);
         ThreeShipRandom(this.SystemMap , false);
         TwoShipRandom(this.SystemMap , false);
@@ -1054,7 +1137,14 @@ public class FXMLSinglePlayerController implements Initializable {
         this.ThreeShipButton.setVisible(false);
         this.FourShipBurron.setVisible(false);
         this.ShipsLable.setVisible(false);
-        th
+        this.MyRatingLable.setVisible(true);
+        this.SystemRatingLable.setVisible(true);
+        this.MyRatingLable.setText("0");
+        this.SystemRatingLable.setText("0");
+        this.SystemAction.start();
+        this.file = new File("E:/Java/codes/BattleShip/Log.txt");
+        fileWriter = new FileWriter(file);
+        fileWriter.write("Game is begun !!!\n"+LocalDateTime.now()+"\n");
     }
 
     @FXML

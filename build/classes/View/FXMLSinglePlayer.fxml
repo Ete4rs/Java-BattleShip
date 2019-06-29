@@ -79,8 +79,12 @@
       <Button fx:id="FourShipBurron" layoutX="656.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleFourShipButtonAction" prefHeight="25.0" prefWidth="34.0" style="-fx-background-color: #0f9EA0;" text="4" />
       <Button fx:id="OneShipButton" layoutX="765.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleOneShipButtonAction" prefHeight="25.0" prefWidth="34.0" style="-fx-background-color: #0f9EA0;" text="1" />
       <Button fx:id="PlayButton" layoutX="823.0" layoutY="10.0" mnemonicParsing="false" onAction="#handlePlayButtonAction" style="-fx-background-color: #0f9EA0;" text="Play" />
-      <Label layoutX="624.0" layoutY="14.0" prefHeight="17.0" prefWidth="34.0" text="Ships" />
+      <Label fx:id="ShipsLable" layoutX="624.0" layoutY="14.0" prefHeight="17.0" prefWidth="34.0" text="Ships" />
       <Button fx:id="NewShipsButton" layoutX="871.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleNewShipsButtonAction" style="-fx-background-color: #0f9EA0;" text="New Ships" />
       <Button fx:id="RandomButton" layoutX="955.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRandomButtonAction" style="-fx-background-color: #0f9EA0;" text="Random" />
+      <Label fx:id="RatinLable" layoutX="591.0" layoutY="13.0" text="Rating" />
+      <Label fx:id="MyRatingLable" layoutX="545.0" layoutY="14.0" text="Label" />
+      <Label fx:id="SystemRatingLable" layoutX="649.0" layoutY="14.0" text="Label" />
+      <Label fx:id="WinLable" layoutX="236.0" layoutY="13.0" prefHeight="17.0" prefWidth="99.0" text="Label" />
    </children>
 </AnchorPane>
