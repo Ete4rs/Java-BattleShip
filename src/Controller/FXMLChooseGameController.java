@@ -46,7 +46,6 @@ public class FXMLChooseGameController implements Initializable {
 
     @FXML
     private void handleSingleGameButtonAction(ActionEvent event) throws IOException {
-        //mire fxml vase single game ro baz mikone va badesh satge ro be fuck mide
         try
         {
             handleExitButtonAction();
@@ -66,7 +65,20 @@ public class FXMLChooseGameController implements Initializable {
     }
     
     @FXML
-    private void handleDoubleGameButtonAction(ActionEvent event) {
+    private void handleDoubleGameButtonAction(ActionEvent event) throws IOException {
+        try
+        {
+            handleExitButtonAction();
+            Parent root3 = FXMLLoader.load(getClass().getResource("/View/FXMLDoubleGame.fxml"));       
+            Stage stage3 = new Stage();
+            Scene scene3 = new Scene(root3);
+            stage3.setScene(scene3);
+            stage3.setTitle("BattleShip Game");
+    
+            stage3.show();
+        }catch(RuntimeException e){
+          System.out.println("** RuntimeException from main");
+        }
     }
 
     @FXML

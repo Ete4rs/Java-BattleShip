@@ -1015,6 +1015,7 @@ public class FXMLSinglePlayerController implements Initializable {
     //###########################
     //in tabe faqat miad map ro amade mikone
     public void SetButtonAndShips(){
+        this.NewGameButton.setDisable(true);
         this.WinLable.setVisible(false);
         this.MyRatingLable.setVisible(false);
         this.SystemRatingLable.setVisible(false);
@@ -1115,6 +1116,7 @@ public class FXMLSinglePlayerController implements Initializable {
     
     @FXML
     private void handleFourShipButtonAction(ActionEvent e){
+        this.NewGameButton.setDisable(false);
         sizeShipChoice = 4;
         this.MyGridPane.setDisable(false);
        
@@ -1142,7 +1144,7 @@ public class FXMLSinglePlayerController implements Initializable {
         this.MyRatingLable.setText("0");
         this.SystemRatingLable.setText("0");
         this.SystemAction.start();
-        this.file = new File("E:/Java/codes/BattleShip/Log.txt");
+        this.file = new File("E:/Java/codes/BattleShip/SingleLog.txt");
         fileWriter = new FileWriter(file);
         fileWriter.write("Game is begun !!!\n"+LocalDateTime.now()+"\n");
     }
@@ -1162,11 +1164,26 @@ public class FXMLSinglePlayerController implements Initializable {
     }
 
     @FXML
-    private void handleNewGameButtonAction(ActionEvent event) {
+    private void handleNewGameButtonAction(ActionEvent event) throws IOException {
+        Stage stage = (Stage) NewGameButton.getScene().getWindow();
+        stage.close();
+        try
+        {
+            Parent root3 = FXMLLoader.load(getClass().getResource("/View/FXMLChooseGame.fxml"));       
+            Stage stage3 = new Stage();
+            Scene scene3 = new Scene(root3);
+            stage3.setScene(scene3);
+            stage3.setTitle("BattleShip Game");
+    
+            stage3.show();
+        }catch(RuntimeException e){
+          System.out.println("** RuntimeException from main");
+        }
     }
 
     @FXML
     private void handleRandomButtonAction(ActionEvent event) {
+        this.NewGameButton.setDisable(false);
         NewMap();
         FourShipRandom(this.MyMap , true);
         ThreeShipRandom(this.MyMap , true);

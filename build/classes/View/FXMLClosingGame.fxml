@@ -12,7 +12,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="OkayButton" layoutX="193.0" layoutY="73.0" mnemonicParsing="false" onAction="#handleOkayButtonAction" prefHeight="25.0" prefWidth="52.0" style="-fx-background-color: #D3D3D3;" text="Okay" />
+      <Button fx:id="OkayButton" layoutX="193.0" layoutY="73.0" mnemonicParsing="false" onAction="#handleOkayButtonAction" prefHeight="25.0" prefWidth="52.0" style="-fx-background-color: #D3D3D3;" text="Yes" />
       <Button fx:id="CancelButton" layoutX="36.0" layoutY="73.0" mnemonicParsing="false" onAction="#handleCancelButtonAction" style="-fx-background-color: #D3D3D3;" text="Cancel" />
    </children>
 </AnchorPane>
