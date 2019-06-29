@@ -21,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -56,6 +57,7 @@ public class FXMLSinglePlayerController implements Initializable {
     private Ship[] SystemShips;
     private static int sizeShipChoice = 0;
     private int[][] MyMap = new int[10][10];
+    private int[][] SystemMap = new int[10][10];
     private static int NumberShip = 0 ;
     
     private static int numberTwoShip =0;
@@ -71,6 +73,14 @@ public class FXMLSinglePlayerController implements Initializable {
     private static int C_C_4;
     @FXML
     private Button RandomButton;
+    @FXML
+    private Label ShipsLable;
+    @FXML
+    private Label RatinLable;
+    @FXML
+    private Label MyRatingLable;
+    @FXML
+    private Label SystemRatingLable;
     
         //in vase keshtihaye 1 size
     
@@ -543,37 +553,78 @@ public class FXMLSinglePlayerController implements Initializable {
                 Logger.getLogger(FXMLSinglePlayerController.class.getName()).log(Level.SEVERE, null, ex);
             }
             for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                int a = i, b = j;
-                myCells[i][j].setOnAction(new EventHandler(){
-                    
-                    @Override
-                    public void handle(Event event) {
-                        switch(sizeShipChoice){
-                            case 1:
-                                EnterButtonForOneSize(a,b);
-                                break;
-                            case 2:
-                                EnterButtonForTwoSize( a ,b);
-                                break;
-                            case 3:
-                                EnterButtonForThreeSize(a,b);
-                                break;
-                            case 4:
-                                EnterButtonForFourSize(a,b);
-                                break;
-                                
-                        }    
-                    }  
-               });
+                for (int j = 0; j < 10; j++) {
+                    int a = i, b = j;
+                    myCells[i][j].setOnAction(new EventHandler(){
+
+                        @Override
+                        public void handle(Event event) {
+                            switch(sizeShipChoice){
+                                case 1:
+                                    EnterButtonForOneSize(a,b);
+                                    break;
+                                case 2:
+                                    EnterButtonForTwoSize( a ,b);
+                                    break;
+                                case 3:
+                                    EnterButtonForThreeSize(a,b);
+                                    break;
+                                case 4:
+                                    EnterButtonForFourSize(a,b);
+                                    break;
+
+                            }    
+                        }  
+                   });
+                }
             }
-        }
         }
         
     };
+    
+    Thread SystemAction = new Thread(){
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(FXMLSinglePlayerController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    int a = i, b = j;
+                    systemCells[i][j].setOnAction(new EventHandler(){
+
+                        @Override
+                        public void handle(Event event) {
+                            switch(sizeShipChoice){
+                                case 1:
+                                    EnterButtonForOneSize(a,b);
+                                    break;
+                                case 2:
+                                    EnterButtonForTwoSize( a ,b);
+                                    break;
+                                case 3:
+                                    EnterButtonForThreeSize(a,b);
+                                    break;
+                                case 4:
+                                    EnterButtonForFourSize(a,b);
+                                    break;
+
+                            }    
+                        }  
+                   });
+                }
+            }
+        }
+        
+    };
+    
 
     //##################
-    public void FourShipRandom(){
+    public void FourShipRandom(int[][] Map , boolean w){
+        this.FourShipBurron.setDisable(true);
         Random rand = new Random();
         boolean vertical = rand.nextBoolean();
         if(vertical){
@@ -593,11 +644,10 @@ public class FXMLSinglePlayerController implements Initializable {
                         if(j>9){break;}
                         if(j<0){continue;}
                         if(j==b && (i==First || i==First+1 || i==First+2 || i==First+3 )){
-                            this.MyMap[i][j] = 1;
-                            this.myCells[i][j].setStyle("-fx-background-color: Green;");
+                            Map[i][j] = 1;
                             continue;
                         }
-                        this.MyMap[i][j] = 0;
+                        Map[i][j] = 0;
                     }
                 }
         }
@@ -618,75 +668,272 @@ public class FXMLSinglePlayerController implements Initializable {
                     if(j>9){break;}
                     if(j<0){continue;}
                     if(i==a && (j==First || j==First+1 || j==First+2 || j==First+3)){
-                        this.MyMap[i][j] = 1;
-                        this.myCells[i][j].setStyle("-fx-background-color: Green;");
-                        this.myCells[i][j].setDisable(true);
+                        Map[i][j] = 1;
                         continue;
                     }
-                    this.MyMap[i][j] = 0;
-                    this.myCells[i][j].setDisable(true);
+                    Map[i][j] = 0;
                 }
             }
         }
-        for(int i=0 ; i<10 ; i++){
-            for(int j=0 ; j<10 ; j++){
-                System.out.print(MyMap[i][j]+" ");
+        if(w){
+            for(int i=0 ; i<10 ; i++){
+                for(int j=0 ; j<10 ; j++){
+                    this.MyMap[i][j] = Map[i][j];
+                }
             }
-            System.out.println("");
         }
-        System.out.println("\n\n");
+        else{
+            for(int i=0 ; i<10 ; i++){
+                for(int j=0 ; j<10 ; j++){
+                    this.SystemMap[i][j] = Map[i][j];
+                }
+            }
+        }
     }
     //##################
-    public void ThreeShipRandom(){
+    public void ThreeShipRandom(int[][] Map , boolean w){
         Random rand = new Random();
         int number=0;
-        while(true){
-            boolean vertical = rand.nextBoolean();
-            if(vertical){
-                int a = abs(rand.nextInt())%10;
-                int b = abs(rand.nextInt())%10;
-                int First = 0 , f=0;
-                for(int i=a-3 ; i<=a+3 ; i++){
-                    if(i<0){continue;}
-                    if(i>9){break;}
-                    if(MyMap[i][b]==1 || MyMap[i][b]==0){continue;}
-                    f++;
-                }
-                if(f<3){continue;}
-                for(int i=a-3 ; i<=a+3 ; i++){
-                    if(i<0){continue;}
-                    if(i>9){break;}
-                    if(MyMap[i][b] ==-1 && MyMap[i+1][b]==-1 && MyMap[i+2][b]==-1 ){
-                        First = i;
-                        break;
+        for(int z=0 ; z<2 ; z++){
+            while(true){
+                boolean vertical = rand.nextBoolean();
+                if(vertical){
+                    int a = abs(rand.nextInt())%10;
+                    int b = abs(rand.nextInt())%10;
+                    int First = 0 , f=0;
+                    for(int i=a-2 ; i<=a+2 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        if(Map[i][b]==-1){f++;}
                     }
+                    if(f<3){continue;}
+                    for(int i=a-2 ; i<=a+2 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        if(Map[i][b] ==-1 && Map[i+1][b]==-1 && Map[i+2][b]==-1 ){
+                            First = i;
+                            break;
+                        }
+                    }
+                    for(int i=First-1 ; i<=First+3 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        for(int j=b-1 ; j<=b+1 ; j++){
+                            if(j>9){break;}
+                            if(j<0){continue;}
+                            if(j==b && (i==First || i==First+1 || i==First+2)){
+                                Map[i][j]=1;
+                                continue;
+                            }
+                            Map[i][j] = 0;
+                        }
+                    }
+                    break;
                 }
-                for(int i=First-1 ; i<=First+3 ; i++){
+                else{
+                    int a = abs(rand.nextInt())%10;
+                    int b = abs(rand.nextInt())%10;
+                    int First = 0 , f=0;
+                    for(int i=b-2 ; i<=b+2 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        if(Map[a][i]==1 || Map[a][i]==0){continue;}
+                        f++;
+                    }
+                    if(f<3){continue;}
+
+                    for(int i=b-2 ; i<=b+2 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        if(Map[a][i]==-1 && Map[a][i+1]==-1 && Map[a][i+2]==-1){
+                            First = i;
+                            break;
+                        }
+                    }
+                    for(int i=a-1 ; i<=a+1 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        for(int j=First-1 ; j<=First+3 ; j++){
+                            if(j<0){continue;}
+                            if(j>9){break;}
+                            if(i==a && (j==First || j==First+1 || j==First+2)){
+                                Map[i][j]=1;
+                                continue;
+                            }
+                            Map[i][j]=0;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        if(w){
+            for(int i=0 ; i<10 ; i++){
+                for(int j=0 ; j<10 ; j++){
+                    this.MyMap[i][j] = Map[i][j];
+                }
+            }
+        }
+        else{
+            for(int i=0 ; i<10 ; i++){
+                for(int j=0 ; j<10 ; j++){
+                    this.SystemMap[i][j] = Map[i][j];
+                }
+            }
+        }
+    }
+    //##################
+    public void TwoShipRandom(int[][] Map , boolean w){
+        Random rand = new Random();
+        for(int z=0 ; z<3 ; z++){
+            while(true){
+                boolean vertical = rand.nextBoolean();
+                if(vertical){
+
+                    int a = abs(rand.nextInt())%10;
+                    int b = abs(rand.nextInt())%10;
+                    int First=0  , f=0;
+
+                    for(int i=a-1 ; i<=a+1 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        if(Map[i][b]==-1){
+                            f++;
+                        }
+                    }
+                    if(f<2){continue;}
+                    for(int i=a-1 ; i<=a+1 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        if(Map[i][b]==-1 && Map[i+1][b]==-1){
+                            First = i;
+                            break;
+                        }
+                    }
+                    for(int i=First-1 ; i<=First+2 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        for(int j=b-1 ; j<=b+1 ; j++){
+                            if(j<0){continue;}
+                            if(j>9){break;}
+                            if(j==b && (i==First || i==First+1)){
+                                Map[i][j] = 1;
+                                continue;
+                            }
+                            Map[i][j] = 0;
+                        }
+                    }
+                    break;
+                }
+                else{
+                    int a = rand.nextInt();
+                    int b = rand.nextInt();
+                    int First=0  , f=0;
+                    for(int i=b-1 ; i<=b+1 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        if(Map[a][i]==-1){f++;}
+                    }
+                    if(f<2){continue;}
+                    for(int i=b-1 ; i<=b+1 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        if(Map[a][i]==-1 && Map[a][i+1]==-1){
+                            First = i;
+                            break;
+                        }
+                    }
+                    for(int i=a-1 ; i<=a+1 ; i++){
+                        if(i<0){continue;}
+                        if(i>9){break;}
+                        for(int j=First-1 ; j<=First+2 ; j++){
+                            if(j<0){continue;}
+                            if(j>9){break;}
+                            if(i==a && (j==First || j==First+1)){
+                                Map[i][j] = 1;
+                                continue;
+                            }
+                            Map[i][j] = 0;
+                        }
+                    }
+                    break;
+                }
+
+            }
+        }
+        if(w){
+            for(int i=0 ; i<10 ; i++){
+                for(int j=0 ; j<10 ; j++){
+                    this.MyMap[i][j] = Map[i][j];
+                }
+            }
+        }
+        else{
+            for(int i=0 ; i<10 ; i++){
+                for(int j=0 ; j<10 ; j++){
+                    this.SystemMap[i][j] = Map[i][j];
+                }
+            }
+        }
+    }
+    //##################
+    public void OneShipRandom(int[][] Map , boolean w){
+        Random rand = new Random();
+        for(int z=0 ; z<4 ; z++){
+            while(true){
+                int a = abs(rand.nextInt(10));
+                int b = abs(rand.nextInt(10));
+                
+                if(Map[a][b]==1 || Map[a][b]==0){continue;}
+                Map[a][b] = 1;
+                
+                for(int i=a-1 ; i<=a+1 ; i++){
                     if(i<0){continue;}
                     if(i>9){break;}
                     for(int j=b-1 ; j<=b+1 ; j++){
+                        if(j<0 || (i==a && j==b)){continue;}
                         if(j>9){break;}
-                        if(j<0){continue;}
-                        if(j==b && (i==First || i==First+1 || i==First+2)){
-                            this.MyMap[i][j]=1;
-                            this.myCells[i][j].setStyle("-fx-background-color: Green;");
-                            continue;
-                        }
-                        this.MyMap[i][j] = 0;
+                        Map[i][j] = 0;
                     }
                 }
                 break;
             }
         }
-        for(int i=0 ; i<10 ; i++){
-            for(int j=0 ; j<10 ; j++){
-                System.out.print(MyMap[i][j]+" ");
+        if(w){
+            for(int i=0 ; i<10 ; i++){
+                for(int j=0 ; j<10 ; j++){
+                    this.MyMap[i][j] = Map[i][j];
+                }
             }
-            System.out.println("");
+            for(int i=0 ; i<10 ; i++){
+                for(int j=0 ; j<10 ; j++){
+                    if(MyMap[i][j]==1){
+                        this.myCells[i][j].setStyle("-fx-background-color: Green;");
+                    }
+                    if(MyMap[i][j]==-1){
+                        this.MyMap[i][j]=0;
+                    }
+                }
+            }
         }
-        System.out.println("\n\n\n\n");
+        else{
+            for(int i=0 ; i<10 ; i++){
+                for(int j=0 ; j<10 ; j++){
+                    this.SystemMap[i][j] = Map[i][j];
+                }
+            }
+            for(int i=0 ; i<10 ; i++){
+                for(int j=0 ; j<10 ; j++){
+                    if(MyMap[i][j]==-1){
+                        this.SystemMap[i][j]=0;
+                    }
+                }
+            }
+        }
+        
     }
-        //in tabe faqat miad map ro amade mikone
+    //###########################
+    //in tabe faqat miad map ro amade mikone
     public void SetButtonAndShips(){
         //tu in tabe umadam shipha va cellha ro ok kardam
         MyShips = new Ship[10];
@@ -720,6 +967,7 @@ public class FXMLSinglePlayerController implements Initializable {
             
             for(int j=0 ; j<10 ; j++){
                 MyMap[i][j] = -1;
+                SystemMap[i][j] = -1;
                 myCells[i][j] = new Button();
                 systemCells[i][j] = new Button();
                 myCells[i][j].setMaxSize(60, 45);
@@ -791,7 +1039,22 @@ public class FXMLSinglePlayerController implements Initializable {
   
     @FXML 
     private void handlePlayButtonAction(ActionEvent e){
-        
+        FourShipRandom(this.SystemMap , false);
+        ThreeShipRandom(this.SystemMap , false);
+        TwoShipRandom(this.SystemMap , false);
+        OneShipRandom(this.SystemMap , false);
+        this.NewShipsButton.setVisible(false);
+        this.RandomButton.setVisible(false);
+        this.PlayButton.setVisible(false);
+        this.MyGridPane.setDisable(true);
+        this.SystemGridPane.setDisable(false);
+        this.RatinLable.setVisible(true);
+        this.OneShipButton.setVisible(false);
+        this.TwoShipButton.setVisible(false);
+        this.ThreeShipButton.setVisible(false);
+        this.FourShipBurron.setVisible(false);
+        this.ShipsLable.setVisible(false);
+        th
     }
 
     @FXML
@@ -815,8 +1078,11 @@ public class FXMLSinglePlayerController implements Initializable {
     @FXML
     private void handleRandomButtonAction(ActionEvent event) {
         NewMap();
-        FourShipRandom();
-        ThreeShipRandom();
+        FourShipRandom(this.MyMap , true);
+        ThreeShipRandom(this.MyMap , true);
+        TwoShipRandom(this.MyMap , true);
+        OneShipRandom(this.MyMap , true);
+        this.PlayButton.setDisable(false);
         
     }
 
