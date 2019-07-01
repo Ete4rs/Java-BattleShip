@@ -835,18 +835,11 @@ public class FXMLDoubleGameController implements Initializable {
                 for (int j = 0; j < 10; j++) {
                     int a = i, b = j;
                     systemCells[i][j].setOnAction(new EventHandler(){
-
+                        
                         @Override
                         public void handle(Event event) {
-                            try {
-                                try {
-                                    Thread.sleep(1500);
-                                } catch (InterruptedException ex) {
-                                }
-                                API.Shoot(a,b);
-                            } catch (IOException ex) {
-                                Logger.getLogger(FXMLDoubleGameController.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                            API.shota =a;
+                            API.shotb=b;
                         }  
                    });
                 }
