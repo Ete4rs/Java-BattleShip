@@ -5,7 +5,6 @@
  */
 package Controller;
 
-import Model.Ship;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,8 +57,6 @@ public class FXMLSinglePlayerController implements Initializable {
     //ba button map ro por mikonam va rahattar karam ro jolo mibaram
     private Button[][] myCells = new Button[10][10];    //in vase player
     private Button[][] systemCells = new Button[10][10];    //in vase system
-    private Ship[] MyShips ;
-    private Ship[] SystemShips;
     private static int sizeShipChoice = 0;
     private int[][] MyMap = new int[10][10];
     private int[][] SystemMap = new int[10][10];
@@ -100,13 +97,7 @@ public class FXMLSinglePlayerController implements Initializable {
     public void EnterButtonForOneSize(int a ,int b){
         this.MyMap[a][b] = 4;
         this.myCells[a][b].setDisable(true);
-        this.MyShips[NumberShip].setShipSize(sizeShipChoice);
-        this.MyShips[NumberShip].setCulomnBegin(b);
-        this.MyShips[NumberShip].setCulomnFinish(b);
-        this.MyShips[NumberShip].setIsHORIZONTAL(false);
-        this.MyShips[NumberShip].setIsVertical(true);
-        this.MyShips[NumberShip].setRowBegin(a);
-        this.MyShips[NumberShip++].setRowFinish(a);
+        NumberShip++;
         if(NumberShip  == 10){
             this.MyGridPane.setDisable(true);
             this.OneShipButton.setDisable(true);
@@ -145,11 +136,9 @@ public class FXMLSinglePlayerController implements Initializable {
             
             myCells[a][b].setStyle("-fx-background-color: Green;"); 
             this.MyMap[a][b] = 3;   
-            this.MyShips[NumberShip].setShipSize(sizeShipChoice);  
             this.myCells[a][b].setDisable(true);    //khune entekhabi ham disable mishe
 
             if(numberTwoShip % 2  == 1 ){ 
-                this.MyShips[NumberShip].setShipSize(sizeShipChoice);
                 this.H_V_2 = a;  
                 this.C_C_2 = b;   
                 for(int i=0 ; i<=9 ; i++){
@@ -186,19 +175,11 @@ public class FXMLSinglePlayerController implements Initializable {
             }
             if(numberTwoShip % 2 == 0){
                 if(H_V_2==a){
-                    //miam sheyesh ro kamel mikonam
-                    this.MyShips[NumberShip].setIsHORIZONTAL(true);
-                    this.MyShips[NumberShip].setIsVertical(false);
-                    this.MyShips[NumberShip].setRowBegin(a);
-                    this.MyShips[NumberShip].setRowFinish(a);
                     if(C_C_2 >b){  //in male sotonas miad kochike ro aval migire
                         int t = b;
                         b = C_C_2;
                         C_C_2 = t;
-                    }
-                    //va bad shey ro migad
-                    this.MyShips[NumberShip].setCulomnBegin(C_C_2);
-                    this.MyShips[NumberShip].setCulomnFinish(b);    
+                    }  
                     for(int i=H_V_2 -1 ; i<=H_V_2 +1 ; i++){
                         //az khunehaye atrafesh unayi ke bayad disable shan ro mokhtasateshum ro 0 mikonam
                         if(i<0){continue;}
@@ -213,18 +194,12 @@ public class FXMLSinglePlayerController implements Initializable {
                         }
                     }
 
-                }else{  //inam hamunkar ro mikone vali vase keshti Amudi
-                    this.MyShips[NumberShip].setIsHORIZONTAL(false);
-                    this.MyShips[NumberShip].setIsVertical(true);
-                    this.MyShips[NumberShip].setCulomnBegin(b);
-                    this.MyShips[NumberShip].setCulomnFinish(b);
+                }else{
                     if(H_V_2>a){
                         int t = H_V_2;
                         H_V_2 = a;
                         a = t;
                     }
-                    this.MyShips[NumberShip].setRowBegin(H_V_2);
-                    this.MyShips[NumberShip].setRowFinish(a);
                     for(int i = H_V_2 -1  ; i<=H_V_2 +2 ; i++){
                         if(i<0){continue;}
                         if(i>9){break;}
@@ -329,8 +304,6 @@ public class FXMLSinglePlayerController implements Initializable {
         
         if(numberThreeShip == 2 || numberThreeShip == 5){
                 if(H_V_3==a){
-                    this.MyShips[NumberShip].setIsHORIZONTAL(true);
-                    this.MyShips[NumberShip].setIsVertical(false);
                     int x = C_C_3;
                     if(b<C_C_3){x=b;}
                     
@@ -343,8 +316,6 @@ public class FXMLSinglePlayerController implements Initializable {
                         }
                     }
                 }else{
-                    this.MyShips[NumberShip].setIsHORIZONTAL(false);
-                    this.MyShips[NumberShip].setIsVertical(true);
                     int y = H_V_3;
                     if(y>a){y=a;}
                     
@@ -361,12 +332,6 @@ public class FXMLSinglePlayerController implements Initializable {
             if(H_V_3==a){
                 int x = C_C_3;
                 if(C_C_3>b){x=b;}
-                this.MyShips[NumberShip].setCulomnBegin(x);
-                this.MyShips[NumberShip].setCulomnFinish(x+2);
-                this.MyShips[NumberShip].setRowBegin(a);
-                this.MyShips[NumberShip].setRowFinish(a);
-                
-                
                 for(int i=H_V_3 -1 ; i<=H_V_3 +1 ; i++){
                     if(i>9){break;}
                     if(i<0){continue;}
@@ -381,13 +346,6 @@ public class FXMLSinglePlayerController implements Initializable {
             else{
                 int y=H_V_3 ;
                 if(a<H_V_3){y=a;}
-                this.MyShips[NumberShip].setCulomnBegin(b);
-                this.MyShips[NumberShip].setCulomnFinish(b);
-                this.MyShips[NumberShip].setRowBegin(y);
-                this.MyShips[NumberShip].setRowFinish(y+2);
-                
-                
-                
                 for(int i=y-1 ; i<=y+3 ; i++){
                     if(i>9){break;}
                     if(i<0){continue;}
@@ -445,11 +403,6 @@ public class FXMLSinglePlayerController implements Initializable {
         
         if(numberFourShip==2){
                 if(H_V_4==a){
-                        this.MyShips[NumberShip].setIsHORIZONTAL(true);
-                        this.MyShips[NumberShip].setIsVertical(false);
-
-
-
                         int y = C_C_4;
                         if(y>b){y=b;}
 
@@ -464,9 +417,6 @@ public class FXMLSinglePlayerController implements Initializable {
                 }
                 
                 else{
-                        this.MyShips[NumberShip].setIsHORIZONTAL(true);
-                        this.MyShips[NumberShip].setIsVertical(false);
-
                         int x = H_V_4;
                         if(x>a){x=a;}
 
@@ -1019,9 +969,6 @@ public class FXMLSinglePlayerController implements Initializable {
         this.WinLable.setVisible(false);
         this.MyRatingLable.setVisible(false);
         this.SystemRatingLable.setVisible(false);
-        //tu in tabe umadam shipha va cellha ro ok kardam
-        MyShips = new Ship[10];
-        SystemShips = new Ship[10];
         
         this.SystemGridPane.setDisable(true);
         this.MyGridPane.setDisable(true);
@@ -1030,24 +977,6 @@ public class FXMLSinglePlayerController implements Initializable {
         this.TwoShipButton.setDisable(true);
         this.OneShipButton.setDisable(true);
         for(int i=0 ; i<10 ; i++){
-            MyShips[i] = new Ship();
-            SystemShips[i] = new Ship();
-            if(i<=3){
-                MyShips[i].setShipSize(1);
-                SystemShips[i].setShipSize(1);              
-            }
-            else if(i<=6){
-                MyShips[i].setShipSize(2);
-                SystemShips[i].setShipSize(2);             
-            }
-            else if(i<=8){
-                MyShips[i].setShipSize(3);
-                SystemShips[i].setShipSize(3);               
-            }
-            else if(i==9){
-                MyShips[i].setShipSize(4);
-                SystemShips[i].setShipSize(4);
-            }
             
             for(int j=0 ; j<10 ; j++){
                 MyMap[i][j] = -1;
@@ -1144,7 +1073,7 @@ public class FXMLSinglePlayerController implements Initializable {
         this.MyRatingLable.setText("0");
         this.SystemRatingLable.setText("0");
         this.SystemAction.start();
-        this.file = new File("E:/Java/codes/BattleShip/SingleLog.txt");
+        this.file = new File("E:/Java/codes/BattleShip/BattleShip/SingleLog.txt");
         fileWriter = new FileWriter(file);
         fileWriter.write("Game is begun !!!\n"+LocalDateTime.now()+"\n");
     }

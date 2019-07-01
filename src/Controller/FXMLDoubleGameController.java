@@ -5,6 +5,9 @@
  */
 package Controller;
 
+import Model.API;
+import static Model.API.CheckStatus;
+//import static Model.API.getmap;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,6 +44,7 @@ public class FXMLDoubleGameController implements Initializable {
     private Button NewGameButton;
     @FXML
     private GridPane SystemGridPane;
+    public static GridPane gridPublic;
     @FXML
     private Button ThreeShipButton;
     @FXML
@@ -61,10 +65,13 @@ public class FXMLDoubleGameController implements Initializable {
     private Label RatinLable;
     @FXML
     private Label MyRatingLable;
+    public static Label myRatingLabel;
     @FXML
     private Label SystemRatingLable;
+    public static Label sysLabelRat;
     @FXML
     private Label WinLable;
+    public static Label winlab;
 
     private int[][] MyMap;
     private int[][] SystemMap;
@@ -92,6 +99,9 @@ public class FXMLDoubleGameController implements Initializable {
     private FileWriter fileWriter;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
     private LocalDateTime now;
+    @FXML
+    private Label StatusLabel;
+    public static Label labelStatus;
     
     
     
@@ -99,7 +109,7 @@ public class FXMLDoubleGameController implements Initializable {
     public void EnterButtonForOneSize(int a ,int b){
         this.MyMap[a][b] = 4;
         this.myCells[a][b].setDisable(true);
-        if(NumberShip  == 10){
+        if(++NumberShip  == 10){
             this.MyGridPane.setDisable(true);
             this.OneShipButton.setDisable(true);
             this.PlayButton.setDisable(false);
@@ -516,6 +526,7 @@ public class FXMLDoubleGameController implements Initializable {
     //#####################
     
     public void FourShipRandom(int[][] Map , boolean w){
+        System.out.println("for");
         this.FourShipBurron.setDisable(true);
         Random rand = new Random();
         boolean vertical = rand.nextBoolean();
@@ -811,6 +822,40 @@ public class FXMLDoubleGameController implements Initializable {
     }
     //########################
     
+    Thread Action2 = new Thread(){
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(FXMLSinglePlayerController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    int a = i, b = j;
+                    systemCells[i][j].setOnAction(new EventHandler(){
+
+                        @Override
+                        public void handle(Event event) {
+                            try {
+                                try {
+                                    Thread.sleep(1500);
+                                } catch (InterruptedException ex) {
+                                }
+                                API.Shoot(a,b);
+                            } catch (IOException ex) {
+                                Logger.getLogger(FXMLDoubleGameController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }  
+                   });
+                }
+            }
+        }
+        
+    };
+    
+    
     
     
     Thread Action = new Thread(){
@@ -852,7 +897,52 @@ public class FXMLDoubleGameController implements Initializable {
         
     };
     
+    
+    Thread CheckStatusAction = new Thread(){
+
+        @Override
+        public void run() {
+            try {
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException ex) {
+                }
+                for(int z=0 ; z<API.getmap.size() ;z++){
+                for(int i=0 ; i<10 ; i++){
+                    if(API.getmap.get(z++)==i){
+                        for(int j=0 ; j<10 ; j++){
+                            if(API.getmap.get(z)==j){
+                                if(MyMap[i][j]==0){
+                                    Shootdouble(i,j,false);
+                                }
+                                else{
+                                    Shootdouble(i,j,true);
+                                }
+                            }
+                        }
+                    }
+                }}
+                CheckStatus(MyMap);
+                
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDoubleGameController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        
+    };
+    
+    public void Shootdouble(int a , int b , boolean bool){
+        if(!bool){this.myCells[a][b].setStyle("-fx-background-color: blue;");}
+        else {this.myCells[a][b].setStyle("-fx-background-color: #FF7D00");}
+    }
+    
     public void SetButtonAndShips(){
+        StatusLabel.setVisible(false);
+        labelStatus = StatusLabel;
+        myRatingLabel = MyRatingLable;
+        sysLabelRat = SystemRatingLable;
+        winlab = WinLable;
         this.NewGameButton.setDisable(true);
         this.WinLable.setVisible(false);
         this.MyRatingLable.setVisible(false);
@@ -948,11 +1038,11 @@ public class FXMLDoubleGameController implements Initializable {
 
     @FXML
     private void handlePlayButtonAction(ActionEvent event) throws IOException {
+        API.APII();
         this.NewShipsButton.setVisible(false);
         this.RandomButton.setVisible(false);
         this.PlayButton.setVisible(false);
         this.MyGridPane.setDisable(true);
-        this.SystemGridPane.setDisable(false);
         this.RatinLable.setVisible(true);
         this.OneShipButton.setVisible(false);
         this.TwoShipButton.setVisible(false);
@@ -966,6 +1056,14 @@ public class FXMLDoubleGameController implements Initializable {
         this.file = new File("E:/Java/codes/BattleShip/SingleLog.txt");
         fileWriter = new FileWriter(file);
         fileWriter.write("Game is begun !!!\n"+LocalDateTime.now()+"\n");
+        for(int i=0 ; i<10 ; i++){
+            for(int j=0 ; j<10 ; j++){
+                if(MyMap[i][j]!=0){MyMap[i][j]=1;}
+            }
+        }
+        Action2.start();
+        CheckStatusAction.start();
+        gridPublic = SystemGridPane;
     }
 
     @FXML
@@ -982,6 +1080,7 @@ public class FXMLDoubleGameController implements Initializable {
         TwoShipRandom(this.MyMap , true);
         OneShipRandom(this.MyMap , true);
         this.PlayButton.setDisable(false);
+        Action.stop();
     }
     
 }
